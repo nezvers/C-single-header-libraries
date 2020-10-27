@@ -1,20 +1,18 @@
 #ifndef RECTANGLE_MANIPULATION_H
 #define RECTANGLE_MANIPULATION_H
 
-#ifndef RECTANGLE_MANIPULATION_STANDALONE
-    #include "raylib.h"
-#else
-    typedef struct Rectangle{
-        float x;
-        float y;
-        float width;
-        float height;
-    }Rectangle;
-    
-    typedef struct Vector2{
-        float x;
-        float y;
-    }Vector2;
+#ifndef RAYLIB_H || RAYMATH_H
+typedef struct Rectangle{
+    float x;
+    float y;
+    float width;
+    float height;
+}Rectangle;
+
+typedef struct Vector2{
+    float x;
+    float y;
+}Vector2;
 #endif
 
 #if defined(RECTANGLE_MANIPULATION_HEADER_ONLY)
@@ -52,8 +50,11 @@ RECTMDEF float       RectAspectRatio     (Rectangle *rect);                     
     }
 #endif
 
+#endif // RECTANGLE_MANIPULATION_H
+
+
 //------------------------------------------------------------------------------------
-// Rectangle manipulation function implementation
+// Rectangle manipulation function implementation - *.c part
 //------------------------------------------------------------------------------------
 #ifdef RECTANGLE_MANIPULATION_IMPLEMENTATION
 void RectangleRemoveTop(Rectangle *rect, float amount){
@@ -121,5 +122,3 @@ float RectAspectRatio(Rectangle *rect){
     return rect->width / rect->height;
 }
 #endif // RECTANGLE_MANIPULATION_IMPLEMENTATION
-
-#endif // RECTANGLE_MANIPULATION_H
