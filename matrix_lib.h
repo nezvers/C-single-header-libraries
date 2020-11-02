@@ -10,39 +10,39 @@ typedef struct MatrixF{
     float *data;
 }MatrixF;
 
-MatrixF CreateMatrixF(int collumns, int rows);
-void DestroyMatrixF(MatrixF mat);
+MatrixF MatrixFCreate(int collumns, int rows);
+void    MatrixFDestroy(MatrixF mat);
 
-MatrixF TransposeMatrixF(MatrixF mat);
+MatrixF MatrixFTransposed(MatrixF mat);
 MatrixF MatrixFAdd(MatrixF mat, float i);
 MatrixF MatrixFScaler(MatrixF mat, float i);
 MatrixF MatrixFSum(MatrixF mat, MatrixF mat2);
 MatrixF MatrixFSubtract(MatrixF mat, MatrixF mat2);
-
+MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2);
+void    MatrixFPrint(MatrixF mat);
 #endif //MATRIX_LIB_H
 
 
 
 #if defined MATRIX_LIB_IMPLEMENTATION
 //Float matrix
-MatrixF CreateMatrixF(int collumns, int rows){
+MatrixF MatrixFCreate(int collumns, int rows){
     float *data = (float*)calloc( collumns * rows, sizeof(float));
     MatrixF mat = {collumns, rows, data};
     return mat;
 }
 
-void DestroyMatrixF(MatrixF mat){
+void MatrixFDestroy(MatrixF mat){
     free(mat.data);
 }
 
-MatrixF TransposeMatrixF(MatrixF mat){
+MatrixF MatrixFTransposed(MatrixF mat){
     MatrixF newMat = CreateMatrixF(mat.rows, mat.collumns);
     for(int y = 0; y < mat.rows; y++){
         for(int x = 0; x < mat.collumns; x++){
             newMat.data[x*newMat.collumns+y] = mat.data[x+y*mat.collumns];
         }
     }
-    DestroyMatrixF(mat);
     return newMat;
 }
 
@@ -93,6 +93,13 @@ MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2){
     return mat3;
 }
 
-
+void MatrixFPrint(MatrixF mat){
+    for( int y = 0; y < mat.rows; y++){
+        for(int x =0; x < mat.collumns; x++){
+            printf("%f ", mat.data[x+y*mat.collumns]);
+        }
+        printf("\n");
+    }
+}
 
 #endif //MATRIX_LIB_IMPLEMENTATION
