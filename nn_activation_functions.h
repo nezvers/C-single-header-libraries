@@ -14,7 +14,7 @@
 #endif
 
 // Hyperbolic Tanjant Function
-NNACTDEF float _tanh(float x, bool derivative=0);
+NNACTDEF float _tanh(float x, int derivative);
 //ReLU Function
 NNACTDEF float re(float x);
 //Leaky ReLy
@@ -38,7 +38,7 @@ NNACTDEF float swish(float x);
 
 #ifdef NN_ACTIVATION_IMPLEMENTATION
 // Hyperbolic Tanjant Function
-float _tanh(float x, bool derivative=0){
+float _tanh(float x, int derivative){
     if(derivative){
         return (1 - (x*x));
     }
