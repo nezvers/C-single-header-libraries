@@ -19,6 +19,7 @@ MatrixF MatrixFScaler(MatrixF mat, float i);
 MatrixF MatrixFSum(MatrixF mat, MatrixF mat2);
 MatrixF MatrixFSubtract(MatrixF mat, MatrixF mat2);
 MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2);
+MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2);
 void    MatrixFPrint(MatrixF mat);
 #endif //MATRIX_LIB_H
 
@@ -37,7 +38,7 @@ void MatrixFDestroy(MatrixF mat){
 }
 
 MatrixF MatrixFTransposed(MatrixF mat){
-    MatrixF newMat = CreateMatrixF(mat.rows, mat.collumns);
+    MatrixF newMat = MatrixFCreate(mat.rows, mat.collumns);
     for(int y = 0; y < mat.rows; y++){
         for(int x = 0; x < mat.collumns; x++){
             newMat.data[x*newMat.collumns+y] = mat.data[x+y*mat.collumns];
@@ -83,13 +84,27 @@ MatrixF MatrixFSubtract(MatrixF mat, MatrixF mat2){
 }
 
 MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2){
-    MatrixF mat3 = CreateMatrixF(mat2.collumns, mat1.rows);
+    MatrixF mat3 = MatrixFCreate(mat2.collumns, mat1.rows);
     for(int i = 0; i < mat3.rows; ++i)
         for(int j = 0; j < mat3.collumns; ++j)
             for(int k = 0; k < mat1.collumns; ++k)
             {
                 mat3.data[j + i * mat3.collumns] += mat1.data[k + i * mat1.collumns] * mat2.data[k * mat2.collumns + j];
             }
+    return mat3;
+}
+
+MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2){
+    MatrixF mat3 = MatrixFCreate(mat2.collumns, mat1.rows);
+    for(int i = 0; i < mat3.rows; ++i)
+        for(int j = 0; j < mat3.collumns; ++j){
+            float summ = 0.0f;
+            for(int k = 0; k < mat1.collumns; ++k)
+            {
+                summ += mat1.data[k + i * mat1.collumns] * mat2.data[k * mat2.collumns + j];
+            }
+            mat3.data[j + i * mat3.collumns] = summ;
+        }
     return mat3;
 }
 
