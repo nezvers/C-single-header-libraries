@@ -14,13 +14,15 @@ MatrixF MatrixFCreate(int columns, int rows);
 void    MatrixFDestroy(MatrixF mat);
 
 MatrixF MatrixFTransposed(MatrixF mat);
-MatrixF MatrixFAdd(MatrixF mat, float i);
-MatrixF MatrixFScaler(MatrixF mat, float i);
-MatrixF MatrixFSum(MatrixF mat, MatrixF mat2);
-MatrixF MatrixFSubtract(MatrixF mat, MatrixF mat2);
+void    MatrixFAdd(MatrixF mat, float i);
+void    MatrixFScaler(MatrixF mat, float i);
+void    MatrixFSum(MatrixF mat, MatrixF mat2);
+void    MatrixFSubtract(MatrixF mat, MatrixF mat2);
+void    MatrixFMultiplyElements(MatrixF mat, MatrixF mat2);
 MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2);
 MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2);
 MatrixF MatrixFCreateColumnFromArray(float* _data, int size);
+MatrixF MatrixFCopy(MatrixF mat);
 void    MatrixFPrint(MatrixF mat);
 #endif //MATRIX_LIB_H
 
@@ -48,40 +50,44 @@ MatrixF MatrixFTransposed(MatrixF mat){
     return newMat;
 }
 
-MatrixF MatrixFAdd(MatrixF mat, float i){
+void    MatrixFAdd(MatrixF mat, float i){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] += i;
         }
     }
-    return mat;
 }
 
-MatrixF MatrixFScaler(MatrixF mat, float i){
+void    MatrixFScaler(MatrixF mat, float i){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] *= i;
         }
     }
-    return mat;
 }
 
-MatrixF MatrixFSum(MatrixF mat, MatrixF mat2){
+void    MatrixFSum(MatrixF mat, MatrixF mat2){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] += mat2.data[x+y*mat.columns];
         }
     }
-    return mat;
 }
 
-MatrixF MatrixFSubtract(MatrixF mat, MatrixF mat2){
+void    MatrixFSubtract(MatrixF mat, MatrixF mat2){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] -= mat2.data[x+y*mat.columns];
         }
     }
-    return mat;
+}
+
+void    MatrixFMultiplyElements(MatrixF mat, MatrixF mat2){
+    for( int y = 0; y < mat.rows; y++){
+        for(int x =0; x < mat.columns; x++){
+            mat.data[x+y*mat.columns] -= mat2.data[x+y*mat.columns];
+        }
+    }
 }
 
 MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2){
@@ -116,6 +122,12 @@ MatrixF MatrixFCreateColumnFromArray(float* _data, int size){
         mat.data[i] = _data[i];
     }
     return mat;
+}
+
+MatrixF MatrixFCopy(MatrixF mat){
+    float* data = (float*)calloc(mat.columns * mat.rows, sizeof(float));
+    MatrixF newMat = {mat.columns, mat.rows, data};
+    return newMat;
 }
 
 void MatrixFPrint(MatrixF mat){
