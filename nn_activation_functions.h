@@ -29,7 +29,8 @@ NNACTDEF float fast_sigmoid(float x);
 NNACTDEF float sigmoid(float x);
 //swish
 NNACTDEF float swish(float x);
-
+//Gradient value
+NNACTDEF float dsigmoid(float x);
 #ifdef __cplusplus
     }
 #endif
@@ -78,5 +79,10 @@ float sigmoid(float x){
 //swish
 float swish(float x){
     return sigmoid(x) *x;
+}
+
+//For gradient
+float dsigmoid(float x) {
+  return x * (1-x);
 }
 #endif
