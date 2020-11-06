@@ -3,6 +3,7 @@
 //Simple Matrix library intended for Neural Network basics
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h> //for randomization
 
 typedef float matType; //one place to change type of matrix
@@ -130,6 +131,7 @@ Matrix MatrixCreateColumnFromArray(matType* _data, int size){
 
 Matrix MatrixCopy(Matrix mat){
     matType* data = (matType*)calloc(mat.columns * mat.rows, sizeof(matType));
+    memcpy (data, mat.data, sizeof(matType) * mat.columns * mat.rows);
     Matrix newMat = {mat.columns, mat.rows, data};
     return newMat;
 }
