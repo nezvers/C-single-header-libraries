@@ -4,44 +4,46 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct MatrixF{
+typedef float matType; //one place to change type of matrix
+
+typedef struct Matrix{
     int columns;
     int rows;
-    float *data;
-}MatrixF;
+    matType *data;
+}Matrix;
 
-MatrixF MatrixFCreate(int columns, int rows);
-void    MatrixFDestroy(MatrixF mat);
+Matrix MatrixCreate(int columns, int rows);
+void    MatrixDestroy(Matrix mat);
 
-MatrixF MatrixFTransposed(MatrixF mat);
-void    MatrixFAdd(MatrixF mat, float i);
-void    MatrixFScaler(MatrixF mat, float i);
-void    MatrixFSum(MatrixF mat, MatrixF mat2);
-void    MatrixFSubtract(MatrixF mat, MatrixF mat2);
-void    MatrixFMultiplyElements(MatrixF mat, MatrixF mat2);
-MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2);
-MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2);
-MatrixF MatrixFCreateColumnFromArray(float* _data, int size);
-MatrixF MatrixFCopy(MatrixF mat);
-void    MatrixFPrint(MatrixF mat);
+void    MatrixAdd(Matrix mat, matType i);
+void    MatrixScaler(Matrix mat, matType i);
+void    MatrixSum(Matrix mat, Matrix mat2);
+void    MatrixSubtract(Matrix mat, Matrix mat2);
+void    MatrixMultiplyElements(Matrix mat, Matrix mat2);
+Matrix MatrixMultiply(Matrix mat1, Matrix mat2);
+Matrix MatrixProduct(Matrix mat1, Matrix mat2);
+Matrix MatrixTransposed(Matrix mat);
+Matrix MatrixCreateColumnFromArray(matType* _data, int size);
+Matrix MatrixCopy(Matrix mat);
+void    MatrixPrint(Matrix mat);
 #endif //MATRIX_LIB_H
 
 
 
 #if defined MATRIX_LIB_IMPLEMENTATION
 //Float matrix
-MatrixF MatrixFCreate(int columns, int rows){
-    float *data = (float*)calloc( columns * rows, sizeof(float));
-    MatrixF mat = {columns, rows, data};
+Matrix MatrixCreate(int columns, int rows){
+    matType *data = (matType*)calloc( columns * rows, sizeof(matType));
+    Matrix mat = {columns, rows, data};
     return mat;
 }
 
-void MatrixFDestroy(MatrixF mat){
+void MatrixDestroy(Matrix mat){
     free(mat.data);
 }
 
-MatrixF MatrixFTransposed(MatrixF mat){
-    MatrixF newMat = MatrixFCreate(mat.rows, mat.columns);
+Matrix MatrixTransposed(Matrix mat){
+    Matrix newMat = MatrixCreate(mat.rows, mat.columns);
     for(int y = 0; y < mat.rows; y++){
         for(int x = 0; x < mat.columns; x++){
             newMat.data[x*newMat.columns+y] = mat.data[x+y*mat.columns];
@@ -50,7 +52,7 @@ MatrixF MatrixFTransposed(MatrixF mat){
     return newMat;
 }
 
-void    MatrixFAdd(MatrixF mat, float i){
+void    MatrixAdd(Matrix mat, matType i){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] += i;
@@ -58,7 +60,7 @@ void    MatrixFAdd(MatrixF mat, float i){
     }
 }
 
-void    MatrixFScaler(MatrixF mat, float i){
+void    MatrixScaler(Matrix mat, matType i){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] *= i;
@@ -66,7 +68,7 @@ void    MatrixFScaler(MatrixF mat, float i){
     }
 }
 
-void    MatrixFSum(MatrixF mat, MatrixF mat2){
+void    MatrixSum(Matrix mat, Matrix mat2){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] += mat2.data[x+y*mat.columns];
@@ -74,7 +76,7 @@ void    MatrixFSum(MatrixF mat, MatrixF mat2){
     }
 }
 
-void    MatrixFSubtract(MatrixF mat, MatrixF mat2){
+void    MatrixSubtract(Matrix mat, Matrix mat2){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] -= mat2.data[x+y*mat.columns];
@@ -82,7 +84,7 @@ void    MatrixFSubtract(MatrixF mat, MatrixF mat2){
     }
 }
 
-void    MatrixFMultiplyElements(MatrixF mat, MatrixF mat2){
+void    MatrixMultiplyElements(Matrix mat, Matrix mat2){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             mat.data[x+y*mat.columns] -= mat2.data[x+y*mat.columns];
@@ -90,8 +92,8 @@ void    MatrixFMultiplyElements(MatrixF mat, MatrixF mat2){
     }
 }
 
-MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2){
-    MatrixF mat3 = MatrixFCreate(mat2.columns, mat1.rows);
+Matrix MatrixMultiply(Matrix mat1, Matrix mat2){
+    Matrix mat3 = MatrixCreate(mat2.columns, mat1.rows);
     for(int i = 0; i < mat3.rows; ++i)
         for(int j = 0; j < mat3.columns; ++j)
             for(int k = 0; k < mat1.columns; ++k)
@@ -101,11 +103,11 @@ MatrixF MatrixFMultiply(MatrixF mat1, MatrixF mat2){
     return mat3;
 }
 
-MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2){
-    MatrixF mat3 = MatrixFCreate(mat2.columns, mat1.rows);
+Matrix MatrixProduct(Matrix mat1, Matrix mat2){
+    Matrix mat3 = MatrixCreate(mat2.columns, mat1.rows);
     for(int i = 0; i < mat3.rows; ++i)
         for(int j = 0; j < mat3.columns; ++j){
-            float summ = 0.0f;
+            matType summ = (matType)0;
             for(int k = 0; k < mat1.columns; ++k)
             {
                 summ += mat1.data[k + i * mat1.columns] * mat2.data[k * mat2.columns + j];
@@ -115,22 +117,22 @@ MatrixF MatrixFProduct(MatrixF mat1, MatrixF mat2){
     return mat3;
 }
 
-MatrixF MatrixFCreateColumnFromArray(float* _data, int size){
-    float* data = (float*)calloc( size, sizeof(float));
-    MatrixF mat = {1, size, data};
+Matrix MatrixCreateColumnFromArray(matType* _data, int size){
+    matType* data = (matType*)calloc( size, sizeof(matType));
+    Matrix mat = {1, size, data};
     for(int i=0; i < size; i++){
         mat.data[i] = _data[i];
     }
     return mat;
 }
 
-MatrixF MatrixFCopy(MatrixF mat){
-    float* data = (float*)calloc(mat.columns * mat.rows, sizeof(float));
-    MatrixF newMat = {mat.columns, mat.rows, data};
+Matrix MatrixCopy(Matrix mat){
+    matType* data = (matType*)calloc(mat.columns * mat.rows, sizeof(matType));
+    Matrix newMat = {mat.columns, mat.rows, data};
     return newMat;
 }
 
-void MatrixFPrint(MatrixF mat){
+void MatrixPrint(Matrix mat){
     for( int y = 0; y < mat.rows; y++){
         for(int x =0; x < mat.columns; x++){
             printf("%f ", mat.data[x+y*mat.columns]);
