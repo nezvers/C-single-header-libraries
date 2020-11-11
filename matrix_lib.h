@@ -11,7 +11,7 @@ typedef float matType; //one place to change type of matrix
 typedef struct Matrix{
     int columns;
     int rows;
-    matType *data;
+    matType *data; //1D array of given type
 }Matrix;
 
 Matrix MatrixCreate(int columns, int rows);
